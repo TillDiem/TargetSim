@@ -1,0 +1,8 @@
+/vis/open OGL
+/vis/drawVolume
+/vis/scene/add/axes
+/vis/viewer/set/autoRefresh 1
+/vis/scene/add/trajectories smooth
+/vis/scene/add/hits
+/vis/scene/endOfEventAction accumulate
+/vis/scene/add/scale 10 cm

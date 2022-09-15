@@ -1,0 +1,3 @@
+/gun/energy 120 GeV
+/gun/particle e-
+/run/beamOn 100
