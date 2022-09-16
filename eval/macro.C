@@ -20,85 +20,78 @@ using namespace std;
 
 void macro(string NEUTFile="nuis_out", string InputDirectory="", string OutputDirectory="" )
 {
-
-  //Making plots nicer
+//Make plots not extremly ugly
   gROOT->ForceStyle(1); gStyle->SetPadTopMargin(0.07); gStyle->SetPadRightMargin(0.05); gStyle->SetPadLeftMargin(0.15); gStyle->SetPadBottomMargin(0.16); gStyle->SetLabelSize(0.06,"xyz"); gStyle->SetTitleSize(0.06,"xyz"); gStyle->SetTitleOffset(0.9,"x"); gStyle->SetTitleOffset(1.1,"y"); gStyle->SetTitleOffset(0.9,"z"); gStyle->SetStatX(0.8); gStyle->SetStatW(0.2); gStyle->SetStatY(0.85); gStyle->SetStatH(0.1); gStyle->SetOptStat(0); gStyle->SetHistLineWidth(3); gStyle->SetPadTickX(1); gStyle->SetPadTickY(1); gStyle->SetPadGridX(kTRUE); gStyle->SetPadGridY(kTRUE);
-
-
-  //Defining output path for PNG and output file name for ROOT file
   string PNGOutputFolderName, ROOTOutputFileName;
   ROOTOutputFileName=Form("%s/ROOT/NEUTFile_%s.root", OutputDirectory.c_str(), NEUTFile.c_str());
   PNGOutputFolderName=Form("%s/PNGs/%s", OutputDirectory.c_str(), NEUTFile.c_str());
 
-  //Defining input file
-  // CRPA HT XSec
   char* NEUTInputFileName1;
   NEUTInputFileName1 = Form("%s/%s.root", InputDirectory.c_str(), NEUTFile.c_str());
   TFile *NEUTInputFile1 = new TFile(NEUTInputFileName1);
-  TH1F *Flux= (TH1F*)NEUTInputFile1->Get("FlatTree_FLUX");
 
-
-  TTree *NEUTInputTree = (TTree*)NEUTInputFile1->Get("Hits");
+  TTree *NEUTInputTree = (TTree*)NEUTInputFile1->Get("HitData");
   int PDG;
-  double energy;
   int fEvent;
-  int fParentID;
-  double fPx;
-  double fPy;
-  double fPz;
-  double fX;
-  double fY;
-  double fZ;
-int fTrackID;
-  string fprocess;
-  Char_t particle;
-  double time;
+  int fTrackID;
 
-  NEUTInputTree->SetBranchAddress("PDG", &PDG);
-  NEUTInputTree->SetBranchAddress("fEvent", &fEvent);
-  NEUTInputTree->SetBranchAddress("energy", &energy);
-  NEUTInputTree->SetBranchAddress("fParentID", &fParentID);
-  NEUTInputTree->SetBranchAddress("fPx", &fPx);
-  NEUTInputTree->SetBranchAddress("fPy", &fPy);
-  NEUTInputTree->SetBranchAddress("fPz", &fPz);
-  NEUTInputTree->SetBranchAddress("fX", &fX);
-  NEUTInputTree->SetBranchAddress("fY", &fY);
-  NEUTInputTree->SetBranchAddress("fZ", &fZ);
-  NEUTInputTree->SetBranchAddress("fTrackID", &fTrackID);
-  NEUTInputTree->SetBranchAddress("fprocess", &fprocess);
-  NEUTInputTree->SetBranchAddress("particle", &particle);
-  NEUTInputTree->SetBranchAddress("time", &time);
+  NEUTInputTree->SetBranchAddress("hit_pdg_code", &PDG);
+  NEUTInputTree->SetBranchAddress("Event", &fEvent);
+  NEUTInputTree->SetBranchAddress("hit_track_id", &fTrackID);
 
   int NEventsToLoopOver = NEUTInputTree->GetEntries(); // 100000
   cout << "Looping over " << NEventsToLoopOver << " events..." << endl;
   cout << endl;
 
-  TH2F *h2 = new TH2F("h2", "h2", 100, -2000, 2000, 100, -2000, 2050);
 
-  vector<vector<int>> PDGVector;
+  vector<int> Track_ID ;
+  vector<int> PDG_Codes;
 
+  Track_ID.push_back(-999);
+  PDG_Codes.push_back(-999);
+
+  TH1I *h1 = new TH1I("PDG", "PDG",445, -222, 222);
   int currentEvent = 0;
 
   //Loop over events in tree
   for (int EventIt=0; EventIt < NEventsToLoopOver; EventIt++)
   {
     NEUTInputTree->GetEntry(EventIt);
-    cout << "Event " << EventIt << endl;
-    cout << fEvent << endl;
+
+    // Check if a new particle gun was fired
     if(fEvent != currentEvent)
     {
+	cout << "New Event" << endl;
+	// Fill the PDG Values
+	for(int i = 0; i < PDG_Codes.size(); i++)
+	{
+		// We are only interested in the Pi0 and Pi+-
+		if(abs(PDG_Codes[i])==211 || PDG_Codes[i]==111 || PDG_Codes[i]==221)
+		{
+			h1->Fill(PDG_Codes[i]);
+		}
+	}
       currentEvent = fEvent;
-      h2->Reset();
+      Track_ID.clear();
+      PDG_Codes.clear();
+      cout << "Reset" << endl;
+      Track_ID.push_back(fTrackID);
+      PDG_Codes.push_back(PDG);
     }
-    cout << fParentID << endl;
-    if(fParentID == 0)
+
+    // Check if the current track ID was already seend
+    if(find(Track_ID.begin(), Track_ID.end(), fTrackID) != Track_ID.end())
     {
-	    cout << "fX: " << fZ << endl;
-      h2->Fill(fX, fZ);
+      // Do nothing
     }
-
-
+    else
+    {
+      Track_ID.push_back(fTrackID);
+      PDG_Codes.push_back(PDG);
+    }
   }//End for loop
+
+
 
 
  cout << " --------------------------------------------------------- " << endl;
@@ -111,12 +104,12 @@ int fTrackID;
   ROOTOutputFile->Close();
 
 
-  TCanvas *cCanvas2= new TCanvas("cCanvas_AngleLepton","cCanvas_AngleLepton",1000,800);
-  h2->SetTitle("Funny HIstogram");
-  h2->GetXaxis()->SetTitle("Cos#theta");
-  h2->Draw("COLZ");
-  cCanvas2->SaveAs(Form("%s/h_AngleLepton.png",PNGOutputFolderName.c_str()));
-  delete cCanvas2;
+  TCanvas *cCanvas1= new TCanvas("cCanvas_AngleLepton","cCanvas_AngleLepton",1000,800);
+  h1->SetTitle("PDG Produced");
+  h1->GetXaxis()->SetTitle("PDG Code");
+  h1->Draw("HIST");
+  cCanvas1->SaveAs(Form("%s/h_PDG.png",PNGOutputFolderName.c_str()));
+  delete cCanvas1;
 
   NEUTInputFile1->Close();
 //
