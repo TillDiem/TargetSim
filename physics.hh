@@ -5,6 +5,9 @@
 #include "G4EmStandardPhysics.hh"
 #include "G4OpticalPhysics.hh"
 #include "G4HadronPhysicsFTFP_BERT.hh"
+#include "G4HadronPhysicsFTFQGSP_BERT.hh"
+#include "G4HadronPhysicsQGSP_BERT.hh"
+#include "G4DecayPhysics.hh"
 
 
 

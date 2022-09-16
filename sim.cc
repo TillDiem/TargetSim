@@ -5,6 +5,8 @@
 #include "G4VisManager.hh"
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
+#include "G4Decay.hh"
+
 
 #include "construction.hh"
 #include "physics.hh"
@@ -31,6 +33,7 @@ int main(int argc, char** argv) {
     }
     G4VisManager *visManager = new G4VisExecutive();
     visManager->Initialize();
+
     // Load the UI manager
     G4UImanager *uiManager = G4UImanager::GetUIpointer();
 

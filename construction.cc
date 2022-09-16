@@ -55,5 +55,9 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
 
 void MyDetectorConstruction::ConstructSDandField(){
        MySensitiveDetector *sensDet = new MySensitiveDetector("SensitiveDetector");
-       logicAir2->SetSensitiveDetector(sensDet);
+       MySensitiveDetector *sensDet2 = new MySensitiveDetector("SensitiveDetector2");
+       MySensitiveDetector *sensDet3 = new MySensitiveDetector("SensitiveDetector3");
+       logicAir1->SetSensitiveDetector(sensDet);
+       logicAir2->SetSensitiveDetector(sensDet2);
+       logicRadiator->SetSensitiveDetector(sensDet3);
 }
