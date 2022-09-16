@@ -15,6 +15,8 @@ G4bool MySensitiveDetector::ProcessHits(G4Step *aStep, G4TouchableHistory *ROhis
 	// Process hits
 	G4Track *track = aStep->GetTrack();
 
+
+
 	// Get Information
 	G4double energy = track->GetKineticEnergy();
 	G4double time = track->GetGlobalTime();
@@ -22,7 +24,16 @@ G4bool MySensitiveDetector::ProcessHits(G4Step *aStep, G4TouchableHistory *ROhis
 	G4ThreeVector momentum = track->GetMomentum();
 	G4String particleName = track->GetDefinition()->GetParticleName();
 	G4int PDGcode = track->GetParticleDefinition()->GetPDGEncoding();
-	G4int trackID = track->GetTrackID();
+	G4int trackID_ = track->GetTrackID();
+
+	if (std::find(trackID.begin(), trackID.end(), trackID_) != trackID.end()){
+		// do nothing
+	}
+	else{
+		trackID.push_back(trackID_);
+		PDGCodes.push_back(PDGcode);
+	}
+
 	G4StepPoint *preStep = aStep->GetPreStepPoint();
 	G4StepPoint *postStep = aStep->GetPostStepPoint();
 	G4ThreeVector prePosition = preStep->GetPosition();
@@ -46,7 +57,7 @@ G4bool MySensitiveDetector::ProcessHits(G4Step *aStep, G4TouchableHistory *ROhis
 	analysisManager->FillNtupleDColumn(8,momentum[2]);
 	analysisManager->FillNtupleSColumn(9,particleName);
 	analysisManager->FillNtupleIColumn(10,PDGcode);
-	analysisManager->FillNtupleIColumn(11,trackID);
+	analysisManager->FillNtupleIColumn(11,trackID_);
 	analysisManager->FillNtupleSColumn(12,process);
 	analysisManager->FillNtupleIColumn(13,parentID);
 	analysisManager->AddNtupleRow(0);

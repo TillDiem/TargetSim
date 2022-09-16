@@ -75,6 +75,8 @@ int fTrackID;
 
   TH2F *h2 = new TH2F("h2", "h2", 100, -2000, 2000, 100, -2000, 2050);
 
+  vector<vector<int>> PDGVector;
+
   int currentEvent = 0;
 
   //Loop over events in tree

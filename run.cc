@@ -7,22 +7,21 @@
 MyRunAction::MyRunAction()
 {
 G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-analysisManager->CreateNtuple("Hits", "Hits");  // rows
-analysisManager->CreateNtupleIColumn("fEvent");  // Integer Column for event number
-analysisManager->CreateNtupleDColumn("fX");
-analysisManager->CreateNtupleDColumn("fY");
-analysisManager->CreateNtupleDColumn("fZ");
-analysisManager->CreateNtupleDColumn("time");
-analysisManager->CreateNtupleDColumn("energy");
-analysisManager->CreateNtupleDColumn("fPx");
-analysisManager->CreateNtupleDColumn("fPy");
-analysisManager->CreateNtupleDColumn("fPz");
-analysisManager->CreateNtupleSColumn("particle");
-analysisManager->CreateNtupleIColumn("PDG");
-analysisManager->CreateNtupleIColumn("fTrackID");
-analysisManager->CreateNtupleSColumn("fprocess");
-analysisManager->CreateNtupleIColumn("fParentID");
-
+analysisManager->CreateNtuple("HitData", "HitData");  // rows
+analysisManager->CreateNtupleIColumn("Event");  // Integer Column for event number
+analysisManager->CreateNtupleDColumn("hit_pos_x");
+analysisManager->CreateNtupleDColumn("hit_pos_y");
+analysisManager->CreateNtupleDColumn("hit_pos_z");
+analysisManager->CreateNtupleDColumn("hit_t");
+analysisManager->CreateNtupleDColumn("hit_e");
+analysisManager->CreateNtupleDColumn("hit_mom_x");
+analysisManager->CreateNtupleDColumn("hit_mom_y");
+analysisManager->CreateNtupleDColumn("hit_mom_z");
+analysisManager->CreateNtupleSColumn("hit_particle_name");
+analysisManager->CreateNtupleIColumn("hit_pdg_code");
+analysisManager->CreateNtupleIColumn("hit_track_id");
+analysisManager->CreateNtupleSColumn("hit_process");
+analysisManager->CreateNtupleIColumn("hit_parent_id");
 analysisManager->FinishNtuple(0);
 
 }
