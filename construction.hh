@@ -29,11 +29,11 @@ private:
 
 	  G4GenericMessenger* fMessenger;
 
-	  G4Box *solidWorld, *solidAir1, *solidAir2, *solidRadiator;
-	  G4LogicalVolume *logicWorld, *logicAir1, *logicAir2, *logicRadiator;
-	  G4VPhysicalVolume *physWorld, *physAir1, *physAir2, *physRadiator;
+	  G4Box *solidWorld, *solidAir1, *solidAir2, *solidAir3,*solidAir4,*solidAir5,*solidAir6,*solidRadiator, *solidBox;
+	  G4LogicalVolume *logicWorld, *logicAir1, *logicAir2, *logicAir3,*logicAir4,*logicAir5,*logicAir6,*logicRadiator, *logicBox;
+	  G4VPhysicalVolume *physWorld, *physAir1, *physAir2, *physAir3, *physAir4, *physAir5, *physAir6, *physRadiator, *physBox;
 
-	  G4Material *air, *lAr, *carbon;
+	  G4Material *air, *lAr, *carbon, *iron, *polysterene, *galactic;
 
 	  void DefineMaterial();
 

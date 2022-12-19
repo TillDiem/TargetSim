@@ -10,6 +10,12 @@
 #include "G4Neutron.hh"
 #include "G4HadronicProcessStore.hh"
 #include "G4HadronicProcess.hh"
+#include "G4RootAnalysisManager.hh"
+
+#include "TH1D.h"
+#include "TFile.h"
+
+
 
 class MyPrimaryGenerator : public G4VUserPrimaryGeneratorAction
 {
@@ -19,7 +25,9 @@ public:
           virtual void GeneratePrimaries(G4Event* anEvent);
 private:
 	  G4ParticleGun* fParticleGun;
+	  TH1D* fSpectrum;
 
+//    	  G4GenericMessenger* msg_; // Messenger for configuration parameters
 };
 
 #endif

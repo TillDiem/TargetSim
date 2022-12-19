@@ -6,11 +6,16 @@
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
 #include "G4Decay.hh"
+#include <FTFP_BERT_HP.hh>
+#include <G4EmStandardPhysics_option4.hh>
+#include "G4VModularPhysicsList.hh"
 
 
 #include "construction.hh"
 #include "physics.hh"
 #include "action.hh"
+#include "TrackingAction.hh"
+#include "EventAction.hh"
 
 int main(int argc, char** argv) {
     // Make the RunManager  -> Takes care of stepping, run actions, etc.
@@ -18,10 +23,18 @@ int main(int argc, char** argv) {
     G4RunManager *runManager = new G4RunManager();
 
     runManager->SetUserInitialization(new MyDetectorConstruction());
-    runManager->SetUserInitialization(new MyPhysicsList());
+    //runManager->SetUserInitialization(new MyPhysicsList());
+    G4VModularPhysicsList* physics_list = new FTFP_BERT_HP();
+    physics_list->ReplacePhysics(new G4EmStandardPhysics_option4());
+     runManager->SetUserInitialization(physics_list);
     runManager->SetUserInitialization(new MyActionInitialization());
+    runManager->SetUserAction(new EventAction());
+    runManager->SetUserAction(new TrackingAction());
+    runManager->SetUserAction(new MyRunAction());
 
     runManager->Initialize();
+
+
 
     // Make the Manager for the Visiualisation
     // use the cli input to determine the type of visualisation

@@ -5,7 +5,7 @@ ROOTScript="macro.C"
 
 #declare -a NEUTFileArraye=("NEUTFile_XSec_cos_AllTemp_nue") # fraction
 declare -a NEUTFileArray=("output0" "output1" "output2")  # raw SF_e
-declare -a RunOverFile=(1 1 1)
+declare -a RunOverFile=(1 0 0)
 InputDirectory="Input"
 
 #Defining input and output directory with respect to current directory
